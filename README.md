@@ -43,7 +43,7 @@ underdoc configure
 * Extract expense data from an image file (invoice/receipt/demand-note)
 
 ```bash
-underdoc extract_expense_data <image_file_name>
+underdoc extract-expense-data <image_file_name>
 
 # Example
 underdoc extract-expense-data receipt-image/my-receipt.png

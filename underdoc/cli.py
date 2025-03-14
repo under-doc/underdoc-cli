@@ -2,9 +2,9 @@ import click
 import httpx
 import json
 import os
-from pydantic import BaseModel, Field
 from enum import Enum
 import base64
+from typing import Dict
 
 API_BASE_URL = "https://api.underdoc.io"
 CONFIG_FILE = os.path.expanduser("~/.underdoc_config.json")
@@ -21,10 +21,6 @@ class ImageFormat(str, Enum):
     jpeg = "jpeg"
     png = "png"
 
-class ExpenseExtractionRequest(BaseModel):
-    image_format: ImageFormat = Field(..., description="Image format (e.g. jpeg, png)")
-    image_data: str = Field(..., description="Base64 encoded image data")
-
 def load_config():
     try:
         with open(CONFIG_FILE, 'r') as f:
@@ -36,7 +32,7 @@ def save_config(config):
     with open(CONFIG_FILE, 'w') as f:
         json.dump(config, f, indent=4)
 
-def _get_request_from_file_name(file_name: str) -> ExpenseExtractionRequest:
+def _get_request_from_file_name(file_name: str) -> Dict[str, str]:
     """Get a request from a file name.
     """
 
@@ -60,10 +56,10 @@ def _get_request_from_file_name(file_name: str) -> ExpenseExtractionRequest:
         raise UnderDocException(f"Error base64 encoding image data: {e}")
 
     # Return the request
-    return ExpenseExtractionRequest(
-        image_format=image_format,
-        image_data=image_data_encoded
-    )
+    return {
+        "image_format": image_format.value,
+        "image_data": image_data_encoded
+    }
 
 @click.group()
 def cli():
@@ -102,7 +98,7 @@ def extract_expense_data(image_file):
     response = httpx.post(
         url,
         headers=headers,
-        json=request.model_dump(),
+        json=request,
         timeout=60.0
     )
     response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)

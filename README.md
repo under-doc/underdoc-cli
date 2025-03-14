@@ -27,8 +27,7 @@ For our Expense Document Understanding API, you can see the API Spec at https://
 ## Using our CLI
 
 * Sign up at our developer portal and get a key.
-* Have Python 3.10 or above on your computer.
-* Install the UnderDoc sdk
+* Install the UnderDoc CLI tool
 
 ```bash
 brew tap under-doc/homebrew-underdoc
@@ -47,7 +46,7 @@ underdoc configure
 underdoc extract_expense_data <image_file_name>
 
 # Example
-underdoc extract_expense_data receipt-image/my-receipt.png
+underdoc extract-expense-data receipt-image/my-receipt.png
 ```
 
 ## Contact us
